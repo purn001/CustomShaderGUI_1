@@ -13,13 +13,13 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
         // public static string MainTexText = "메인 텍스쳐";
     }
 
-    // enum AddGradation {
+    // private enum AddGradation {
 	// 	NONE, 
     //     X, 
     //     Y
 	// }
 
-    enum BlendMode {
+    private enum BlendMode {
 		Zero, One, DstColor, SrcColor, OneMinusDstColor, SrcAlpha, OneMinusSrcColor, DstAlpha, OneMinusDstAlpha, SrcAlphaSaturate, OneMinusSrcAlpha 
 	}
 
@@ -55,11 +55,13 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
     MaterialProperty DissolveSpeed_Y = null;
     MaterialProperty Dissolve_Flow_CustomData = null;
     MaterialProperty Dissolve_Polar_Coordiante = null;
-    // MaterialProperty OutlineToggleMenu = null;
+    MaterialProperty OutlineToggleMenu = null;
     MaterialProperty DissolveOutRange = null;
     MaterialProperty SmoothToggleMenu = null;
     MaterialProperty SmoothRange = null;
-    // MaterialProperty GradationToggleMenu = null;
+
+    MaterialProperty AddGradation = null;
+    MaterialProperty GradationToggleMenu = null;
 
     MaterialProperty NoiseToggleMenu = null;
     MaterialProperty NoiseTex = null;
@@ -71,8 +73,6 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
     MaterialProperty MainFlowIntensity = null;
     MaterialProperty AlphaFlowIntensity = null;
     MaterialProperty DissolveFlowIntensity = null;
-
-    // MaterialProperty SrcBlend = null;
     #endregion
     
     static GUIContent staticLabel = new GUIContent();
@@ -105,11 +105,13 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
         DissolveSpeed_Y = FindProperty("_dY", props);
         Dissolve_Flow_CustomData = FindProperty("_Dissolve_Flow_CustomData", props);
         Dissolve_Polar_Coordiante = FindProperty("_Dissolve_Polar_Coordiante", props);
-        //OutlineToggleMenu = FindProperty("_Use_Outline", props);
+        OutlineToggleMenu = FindProperty("_Use_Outline", props);
         DissolveOutRange = FindProperty("_disOutRange", props);
         SmoothToggleMenu = FindProperty("_Use_Smooth", props);
         SmoothRange = FindProperty("_smoothRange", props);
-        //GradationToggleMenu = FindProperty("_Gradation_Inverse", props);
+
+        AddGradation = FindProperty("_AddGradation", props);
+        GradationToggleMenu = FindProperty("_Gradation_Inverse", props);
 
         NoiseToggleMenu = FindProperty("_Use_Noise", props);
         NoiseTex = FindProperty("_NoiseTex", props);
@@ -121,8 +123,6 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
         MainFlowIntensity = FindProperty("_mFlowIntensity", props);
         AlphaFlowIntensity = FindProperty("_aFlowIntensity", props);
         DissolveFlowIntensity = FindProperty("_dFlowIntensity", props);
-
-        //SrcBlend = FindProperty("_SrcBlend", props);
     }
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
@@ -227,18 +227,18 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
             m_MaterialEditor.ShaderProperty(Dissolve_Polar_Coordiante, MakeLabel(Dissolve_Polar_Coordiante));
             SetKeyword("_DISSOLVE_POLAR_COORDINATE", material.GetInt("_Dissolve_Polar_Coordiante") == 1); 
 
-            // DOAddGradation(material, (AddGradation)material.GetInt("_AddGradation"));
+            DOAddGradation(material);
 
-            // m_MaterialEditor.ShaderProperty(OutlineToggleMenu, MakeLabel(OutlineToggleMenu));
-            // if (material.GetInt("_Use_Outline") == 1)
-            // {
-            // material.EnableKeyword("_USE_OUTLINE");
-            EditorGUI.indentLevel += 2;
-            m_MaterialEditor.ShaderProperty(DissolveOutRange, MakeLabel(DissolveOutRange));
-            EditorGUI.indentLevel -= 2;
-            // }
-            // else
-            //     material.DisableKeyword("_USE_OUTLINE"); 
+            m_MaterialEditor.ShaderProperty(OutlineToggleMenu, MakeLabel(OutlineToggleMenu));
+            if (material.GetInt("_Use_Outline") == 1)
+            {
+                material.EnableKeyword("_USE_OUTLINE");
+                EditorGUI.indentLevel += 2;
+                m_MaterialEditor.ShaderProperty(DissolveOutRange, MakeLabel(DissolveOutRange));
+                EditorGUI.indentLevel -= 2;
+            }
+            else
+                material.DisableKeyword("_USE_OUTLINE"); 
 
             m_MaterialEditor.ShaderProperty(SmoothToggleMenu, MakeLabel(SmoothToggleMenu));
             if (material.GetInt("_Use_Smooth") == 1)
@@ -262,52 +262,24 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
         }
     }
 
-    // void DOAddGradation(Material material, AddGradation addGradation)
-    // {
-    //     if (IsKeywordEnabled("_ADDGRADATION_NONE")) {
-	// 	    addGradation = AddGradation.NONE;
-	// 	}
-	// 	else if (IsKeywordEnabled("_ADDGRADATION_X")) {
-	// 	    addGradation = AddGradation.X;
-	// 	}
-	// 	else if (IsKeywordEnabled("_ADDGRADATION_Y")) {
-	// 	    addGradation = AddGradation.Y;
-	// 	}
+    void DOAddGradation(Material material)
+    {
+        m_MaterialEditor.ShaderProperty(AddGradation, AddGradation.displayName);
 
-    //     addGradation = (AddGradation)EditorGUILayout.EnumPopup(MakeLabel("Add X, Y Gradation?"), addGradation);
-    //     switch(addGradation)
-    //     {
-    //         case AddGradation.NONE:	                 
-    //             addGradation = AddGradation.NONE;         
-    //             SetKeyword("_ADDGRADATION_NONE", addGradation == AddGradation.NONE);            
-    //             break;
-    //         case AddGradation.X:	   
-    //             addGradation = AddGradation.X;
-    //             SetKeyword("_ADDGRADATION_X", addGradation == AddGradation.X);                     
-    //             break;
-    //         case AddGradation.Y:	   
-    //             addGradation = AddGradation.Y;
-    //             SetKeyword("_ADDGRADATION_Y", addGradation == AddGradation.Y);                     
-    //             break;
-    //     }
-        
-    //     // RecordAction("Add X, Y Gradation?");       
-    //     // SetKeyword("_ADDGRADATION_NONE", addGradation == AddGradation.NONE); 
-    //     // SetKeyword("_ADDGRADATION_X", addGradation == AddGradation.X);
-	// 	// SetKeyword("_ADDGRADATION_Y", addGradation == AddGradation.Y);
-
-    //     if(addGradation != AddGradation.NONE){
-    //         EditorGUI.indentLevel += 2;
-    //         bool _Gradation_Inverse = EditorPrefs.GetBool(uniqueKey + "_Gradation_Inverse", false);         
-    //         _Gradation_Inverse = EditorGUILayout.Toggle(MakeLabel(GradationToggleMenu), _Gradation_Inverse);
-    //         EditorPrefs.SetBool(uniqueKey + "_Gradation_Inverse", _Gradation_Inverse); 
-    //         EditorGUI.indentLevel -= 2;
-    //         if (_Gradation_Inverse)
-    //              material.EnableKeyword("_GRADATION_INVERSE");
-    //         else
-    //             material.DisableKeyword("_GRADATION_INVERSE");
-    //     }
-    // }
+        if (material.GetInt("_AddGradation") == 0)
+        {
+            material.EnableKeyword("_ADDGRADATION_NONE");
+        }
+        else if(material.GetInt("_AddGradation") == 1)
+        {
+            material.EnableKeyword("_ADDGRADATION_X");
+            GradationInverse(material);
+        }     
+        else if(material.GetInt("_AddGradation") == 2){
+            material.EnableKeyword("_ADDGRADATION_Y");
+            GradationInverse(material);
+        }
+    }
 
     void DoDeform(Material material)
     {
@@ -336,6 +308,17 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
         else{
             material.DisableKeyword("_USE_NOISE");
         }
+    }
+
+    void GradationInverse(Material material)
+    {
+        EditorGUI.indentLevel += 2;
+        m_MaterialEditor.ShaderProperty(GradationToggleMenu, MakeLabel(GradationToggleMenu));
+        EditorGUI.indentLevel -= 2;
+        if (material.GetInt("_Gradation_Inverse") == 1)
+            material.EnableKeyword("_GRADATION_INVERSE");
+        else
+            material.DisableKeyword("_GRADATION_INVERSE");
     }
 
     void SrcBlendModePopup(Material material, BlendMode blendMode)
@@ -473,10 +456,11 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
 
     void GuiLine(int i_height = 1)
     {
-       // EditorGUILayout.Space(10);
+       //EditorGUILayout.Space(10);
        Rect rect = EditorGUILayout.GetControlRect(false, i_height );
        rect.height = i_height;
-       EditorGUI.DrawRect(rect, new Color (0.0f, 0.5f, 0.0f, 1));     
+       EditorGUI.DrawRect(rect, new Color (0.0f, 0.5f, 0.0f, 1));  
+       EditorGUILayout.Space(10);   
     }
 
     // void InitGUIStyles()
@@ -491,3 +475,4 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
     //     isGUIInitialized = true;
     // }
 }
+
