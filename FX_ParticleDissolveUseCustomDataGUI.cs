@@ -150,8 +150,8 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
             DoDeform(material);
             GuiLine();
             EditorGUILayout.Space(10);
-            SrcBlendModePopup(material, (BlendMode)material.GetInt("_SrcBlend"));
-            DstBlendModePopup(material, (BlendMode)material.GetInt("_DstBlend"));
+            BlendModePopup(material, (BlendMode)material.GetInt("_SrcBlend"), "_SrcBlend");
+            BlendModePopup(material, (BlendMode)material.GetInt("_DstBlend"), "_DstBlend");
             EditorGUILayout.Space(20);
             m_MaterialEditor.RenderQueueField(); 
         }
@@ -280,7 +280,7 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
             GradationInverse(material);
         }
     }
-    
+
     void GradationInverse(Material material)
     {
         EditorGUI.indentLevel += 2;
@@ -321,105 +321,54 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
         }
     }
 
-    void SrcBlendModePopup(Material material, BlendMode blendMode)
+    void BlendModePopup(Material material, BlendMode blendMode, string factor)
     {         
         blendMode = (BlendMode)EditorGUILayout.EnumPopup(MakeLabel("Blend Mode"), blendMode);
         switch(blendMode)
         {
             case BlendMode.Zero:	                 
                 blendMode = BlendMode.Zero;         
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.Zero);               
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.Zero);               
                 break;
             case BlendMode.One:	   
                 blendMode = BlendMode.One;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.One);                       
                 break;
             case BlendMode.DstColor:	   
                 blendMode = BlendMode.DstColor;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.DstColor);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.DstColor);                       
                 break;  
             case BlendMode.SrcColor:	   
                 blendMode = BlendMode.SrcColor;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcColor);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.SrcColor);                       
                 break;  
             case BlendMode.OneMinusDstColor:	   
                 blendMode = BlendMode.OneMinusDstColor;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusDstColor);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.OneMinusDstColor);                       
                 break;  
             case BlendMode.SrcAlpha:	   
                 blendMode = BlendMode.SrcAlpha;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.SrcAlpha);                       
                 break;  
             case BlendMode.OneMinusSrcColor:	   
                 blendMode = BlendMode.OneMinusSrcColor;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcColor);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.OneMinusSrcColor);                       
                 break;  
             case BlendMode.DstAlpha:	   
                 blendMode = BlendMode.DstAlpha;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.DstAlpha);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.DstAlpha);                       
                 break;  
             case BlendMode.OneMinusDstAlpha:	   
                 blendMode = BlendMode.OneMinusDstAlpha;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusDstAlpha);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.OneMinusDstAlpha);                       
                 break;  
             case BlendMode.SrcAlphaSaturate:	   
                 blendMode = BlendMode.SrcAlphaSaturate;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlphaSaturate);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.SrcAlphaSaturate);                       
                 break;     
             case BlendMode.OneMinusSrcAlpha:	   
                 blendMode = BlendMode.OneMinusSrcAlpha;
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);                       
-                break;   
-		}
-    }
-    void DstBlendModePopup(Material material, BlendMode blendMode)
-    {         
-        blendMode = (BlendMode)EditorGUILayout.EnumPopup(MakeLabel("          "),blendMode);
-        switch(blendMode)
-        {
-            case BlendMode.Zero:	                 
-                blendMode = BlendMode.Zero;         
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);               
-                break;
-            case BlendMode.One:	   
-                blendMode = BlendMode.One;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.One);                       
-                break;
-            case BlendMode.DstColor:	   
-                blendMode = BlendMode.DstColor;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.DstColor);                       
-                break;  
-            case BlendMode.SrcColor:	   
-                blendMode = BlendMode.SrcColor;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.SrcColor);                       
-                break;  
-            case BlendMode.OneMinusDstColor:	   
-                blendMode = BlendMode.OneMinusDstColor;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusDstColor);                       
-                break;  
-            case BlendMode.SrcAlpha:	   
-                blendMode = BlendMode.SrcAlpha;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);                       
-                break;  
-            case BlendMode.OneMinusSrcColor:	   
-                blendMode = BlendMode.OneMinusSrcColor;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcColor);                       
-                break;  
-            case BlendMode.DstAlpha:	   
-                blendMode = BlendMode.DstAlpha;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.DstAlpha);                       
-                break;  
-            case BlendMode.OneMinusDstAlpha:	   
-                blendMode = BlendMode.OneMinusDstAlpha;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusDstAlpha);                       
-                break;  
-            case BlendMode.SrcAlphaSaturate:	   
-                blendMode = BlendMode.SrcAlphaSaturate;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlphaSaturate);                       
-                break;     
-            case BlendMode.OneMinusSrcAlpha:	   
-                blendMode = BlendMode.OneMinusSrcAlpha;
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);                       
+                material.SetInt(factor, (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);                       
                 break;   
 		}
     }
