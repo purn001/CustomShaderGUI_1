@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEditor;
  
@@ -280,6 +280,17 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
             GradationInverse(material);
         }
     }
+    
+    void GradationInverse(Material material)
+    {
+        EditorGUI.indentLevel += 2;
+        m_MaterialEditor.ShaderProperty(GradationToggleMenu, MakeLabel(GradationToggleMenu));
+        EditorGUI.indentLevel -= 2;
+        if (material.GetInt("_Gradation_Inverse") == 1)
+            material.EnableKeyword("_GRADATION_INVERSE");
+        else
+            material.DisableKeyword("_GRADATION_INVERSE");
+    }
 
     void DoDeform(Material material)
     {
@@ -308,17 +319,6 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
         else{
             material.DisableKeyword("_USE_NOISE");
         }
-    }
-
-    void GradationInverse(Material material)
-    {
-        EditorGUI.indentLevel += 2;
-        m_MaterialEditor.ShaderProperty(GradationToggleMenu, MakeLabel(GradationToggleMenu));
-        EditorGUI.indentLevel -= 2;
-        if (material.GetInt("_Gradation_Inverse") == 1)
-            material.EnableKeyword("_GRADATION_INVERSE");
-        else
-            material.DisableKeyword("_GRADATION_INVERSE");
     }
 
     void SrcBlendModePopup(Material material, BlendMode blendMode)
@@ -475,4 +475,3 @@ public class FX_ParticleDissolveUseCustomDataGUI: ShaderGUI
     //     isGUIInitialized = true;
     // }
 }
-
